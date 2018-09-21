@@ -7,17 +7,17 @@
   
   <title>Singleton Pattern | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="public class Singleton {  private static Singleton instance;  private Singleton() {}  public static synchronized Singleton getInstance() {     if (instance == null) {         instance = new Singleton(">
+  <meta name="description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Singleton Pattern">
 <meta property="og:url" content="http://yoursite.com/2018/09/21/Singleton-Pattern/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="public class Singleton {  private static Singleton instance;  private Singleton() {}  public static synchronized Singleton getInstance() {     if (instance == null) {         instance = new Singleton(">
+<meta property="og:description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T09:35:44.472Z">
+<meta property="og:updated_time" content="2018-09-21T09:40:38.885Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Singleton Pattern">
-<meta name="twitter:description" content="public class Singleton {  private static Singleton instance;  private Singleton() {}  public static synchronized Singleton getInstance() {     if (instance == null) {         instance = new Singleton(">
+<meta name="twitter:description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,23 +86,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>public class Singleton { </p>
-<pre><code>private static Singleton instance; 
-private Singleton() {}
+        <pre><code>public class Singleton { 
 
-public static synchronized Singleton getInstance() {
-    if (instance == null) {
-        instance = new Singleton();
+    private static Singleton instance; 
+    private Singleton() {}
+
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
     }
-
-    return instance;
 }
-</code></pre><p>}</p>
-
+</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbt8cbl0000kkyysiggipj2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbtejl7000024yy11secx5e" class="article-share-link">Share</a>
       
       
     </footer>
