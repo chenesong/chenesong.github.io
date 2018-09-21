@@ -134,12 +134,38 @@
         return instance;
     ｝
 }
-</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建</p>
+</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建实例本身是线程安全的。<br>    public class Singleton｛<br>        // 类加载时就初始化<br>        private static final Singleton instance = new Singleton();</p>
+<pre><code>    private Singleton() {}
+
+    public static Singleton getInstance() {
+        return instance;
+    }
+｝
+</code></pre><p>缺点：不是一种懒加载模式（lazy initialization)，单例会在加载类一开始就被初始化，即使客户端没有调用getInstance()方法，因此在一些场景中无法使用：如Singleton实例的创建是依赖参数或者配置文件的，在getInstance()之前必须调用某个方法设置参数给它，则饿汉式无法使用。</p>
+<p>方式四(静态内部类)：<br>《Effective Java》书上推荐使用</p>
+<pre><code>public class Singleton {
+    private static class SingletonHolder {
+        private static final Singleton INSTANCE = new Singleton();
+    }
+
+    private Singleton() {}
+
+    public staitc final Singleton getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+}
+</code></pre><p>这种写法仍然使用JVM本身机制保证了线程安全问题，由于SingletonHolder是私有的，除了getInstance()之外没有办法访问它，因此它是懒汉式的，同时读取实例的时候不会进行同步，没有性能缺陷。</p>
+<p>方式五（枚举）：</p>
+<pre><code>public enum EasySingleton {
+    INSTANCE;
+}
+</code></pre><p>我们可以通过EasySingleton.INSTANCE来访问实例，这比调用getInstance()方法简单，创建枚举默认就是线程安全的，所以不需要担心双重检测，还能防止反序列化导致重新创建新的对象。</p>
+<p><strong>总结：</strong><br>单例模式有五种写法：懒汉、饿汉、双重检验锁、静态内部类、枚举，都是线程安全的。<br>一般情况下直接使用恶汉式，如果明确要求懒加载,倾向使用静态内部类,如果涉及反序列化创建对象时试着使用枚举的方法实现单例。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmbzkldg0001e4yyzdxx2qd5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc0heis0000xcyyg6qrce9e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -175,7 +201,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmbzkldo0003e4yyq97eqojb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc0hejr0002xcyyu5mtiy5a" class="article-share-link">Share</a>
       
       
     </footer>
@@ -211,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmbzkldl0002e4yyip1robm8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc0heju0003xcyy6mm2dv3r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -256,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmbzklcm0000e4yyfmptmxfx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc0hejn0001xcyybj3pqib8" class="article-share-link">Share</a>
       
       
     </footer>
