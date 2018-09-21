@@ -7,17 +7,17 @@
   
   <title>Singleton Pattern | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
+  <meta name="description" content="第一种方式，线程同步： public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Singleton Pattern">
 <meta property="og:url" content="http://yoursite.com/2018/09/21/Singleton-Pattern/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
+<meta property="og:description" content="第一种方式，线程同步： public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T09:40:38.885Z">
+<meta property="og:updated_time" content="2018-09-21T09:43:17.649Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Singleton Pattern">
-<meta name="twitter:description" content="public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {             inst">
+<meta name="twitter:description" content="第一种方式，线程同步： public class Singleton {       private static Singleton instance;      private Singleton() {}      public static synchronized Singleton getInstance() {         if (instance == null) {">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,7 +86,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <pre><code>public class Singleton { 
+        <p>第一种方式，线程同步：</p>
+<pre><code>public class Singleton { 
 
     private static Singleton instance; 
     private Singleton() {}
@@ -102,7 +103,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbtfujn0000ecyynwr4jscb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbthzuw0000gkyyi4t08j4i" class="article-share-link">Share</a>
       
       
     </footer>
