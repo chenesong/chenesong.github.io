@@ -84,11 +84,70 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>参考： <a href="http://www.cnblogs.com/dolphin0520/p/3920407.html" target="_blank" rel="noopener">http://www.cnblogs.com/dolphin0520/p/3920407.html</a></p>
+<p>ThreadLocal（线程本地变量或线程本地存储），为每个变量在每个线程中都创建一个副本，即每个线程都可以访问自己内部的副本变量。</p>
+<p>示例：</p>
+<pre><code>class ConnectionManager {
+    private static Connection connect = null;
+
+    public static Connection openConnection() {
+        if （connect == null) {
+            connect = DriverManager.getConnection();
+        }
+        return connect;
+    }
+
+    public static void closeConnection() {
+        if (connect != null)
+            connect.close();
+    }
+}
+</code></pre><p>假设有这样一个数据库链接管理类，这段代码在单线程中使用没有任何问题，但是如果在多线程中使用呢？很显然，在多线程中使用会存在线程安全问题：第一，这里面的2个方法都没有进行同步，很可能在openConnection方法中多次创建connect；第二，由于connect是共享变量，那么必然在调用connect的地方需要使用同步来保证线程安全，因为很可能在一个线程中使用connect进行数据库操作，而在另一个线程中调用closeConnection关闭连接。</p>
+<p>所以出于线程安全的考虑，必须将这段代码的两个方法进行同步处理，并且在调用connect的地方进行同步处理。</p>
+<p>这样会大大影响程序的执行效率，因为一个线程在使用connect进行数据库操作时，其他线程只能等待。</p>
+<p>那么大家来仔细分析一下这个问题，这地方到底需不需要将connect变量进行共享？事实上，是不需要的。假如每个线程中都有一个connect变量，各个线程之间对connect变量的访问实际上是没有依赖关系的，即一个线程不需要关心其他线程是否对这个connect进行了修改的。</p>
+<p>到这里，可能会有朋友想到，既然不需要在线程之间共享这个变量，可以直接这样处理，在每个需要使用数据库连接的方法中具体使用时才创建数据库链接，然后在方法调用完毕再释放这个连接。比如下面这样：</p>
+<pre><code>class ConnectionManager {
+    private Connection connect = null;
+
+    public Connection openConnection() {
+        if (connect == null) {
+            connect = DriverManager.getConnection();
+        }
+        return connect;
+    }
+
+    public void closeConnection() {
+        if (connection != null)
+            connect.close();
+    }
+} 
+
+class Dao {
+    public void insert() {
+        ConnectionManager connectionManager = new ConnectionManager();
+        Connection connection = connectionManager.openConnection();
+
+        // 使用connection进行操作
+
+        connectionManager.closeConnection();
+    }
+}
+</code></pre><p>这样处理确实没有任何问题，由于每次都是在方法内部创建的连接，线程之间自然不存在线程安全问题。但是这样有一个致命的影响：导致服务器压力非常大，并且严重影响程序的执行性能。由于在方法中频繁开启和关闭数据库连接，这样不尽影响程序的执行效率，还可能导致服务器压力巨大。</p>
+<p>那么这种情况使用ThreadLocal是再适合不过了，因为ThreadLocal在每个线程中对该变量都会创建一个副本，即每个线程内部都会有一个该变量，且在线程内部任何地方都可以使用，线程之间互不影响，这样一来不存在线程安全问题，也不会影响程序的执行性能。</p>
+<p>但是要注意，虽然ThreadLocal能够解决上面说的问题，但是由于在每个线程中都创建了副本，所以要考虑它对资源的消耗，使用ThreadLocal时消耗内存更多。</p>
+<p><strong><em>深入解析ThreadLocal</em></strong></p>
+<p>ThreadLocal类提供的几个方法:</p>
+<pre><code>public T get() {}
+public void set(T value) {}
+public void remvoe() {}
+protected T initialValue() {}
+</code></pre><p>get()方法用来获取ThreadLocal在当前线程中保存的变量副本，set()用来设置当前线程中的变量副本，remove()用来移除当前线程中变量的副本，initialValue()是一个protected方法，一般在使用时进行重载，它是一个延迟加载方法。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc1jtdz0001dsyyc3wc1rgz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc5aku70001jsyy0lmi48hs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -205,7 +264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc1jtd50000dsyykq2tbwvq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc5aktd0000jsyyzjtcfar8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -241,7 +300,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc1jte70003dsyynpnu498g" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc5akuf0003jsyym2nmfutc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -277,7 +336,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc1jtea0004dsyywchd93ax" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc5akuh0004jsyy7zc5n45r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -322,7 +381,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc1jte40002dsyy72a2n4wj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc5akuc0002jsyy843umlj1" class="article-share-link">Share</a>
       
       
     </footer>
