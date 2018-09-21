@@ -87,7 +87,7 @@
         <hr>
 <p>主要参考：<a href="https://blog.csdn.net/cuiran/article/details/52299756" target="_blank" rel="noopener">https://blog.csdn.net/cuiran/article/details/52299756</a></p>
 <hr>
-<p>第一种方式（懒汉方式），线程同步：</p>
+<p>方式一（懒汉模式），线程同步：</p>
 <pre><code>public class Singleton { 
     private static Singleton instance; 
     private Singleton() {}
@@ -99,12 +99,47 @@
         return instance;
     }
 }
-</code></pre><p>缺点：虽然线程同步，但是会</p>
+</code></pre><p>缺点：虽然保证了线程同步，但是并不高效，因为使用synchronized修饰后，任何时候只能有一个线程调用getInstance()方法，其余线程均属于阻塞状态，但是同步操作只有在第一次创建单例实例对象才需要，后续并不需要同步操作，为解决此问题，因此提出下面的双重检验锁模式（Double checked locking pattern）。</p>
+<p>方式二(双重检验锁模式）：</p>
+<p>使用同步块加锁的方式，有两次instance == null检测，一次是在同步块外边，另一次是在同步块内。在同步块内还需要进行检测的原因：可能有多个线程一起进入同步块外的if，如果同步块内不进行检测，可能会生成多个实例。如果之前操作已经生成了一个实例，同步块外的if条件不满足，不会进入同步块中，克服了第一种方式的缺点。</p>
+<pre><code>public class Singleton { 
+    private static Singleton instance; 
+    private Singleton() {}
+
+    public static Singleton getSingleton() {
+        if (instance == null) { // Single Checked
+            synchronized(Singleton.class) {
+                if (instance == null) { // Double Checked
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+</code></pre><p>缺点：instance = new Singleton()不是一个原子操作，JVM会进行3步操作：1. 给instance分配内存； 2. 调用Singleton的构造函数来初始化成员变量； 3. 将instance引用对象指向分配的内存空间（执行完这步instance才非null了）。由于JVM即时编译器存在指令重排，第2步和第3步的顺序不能保证，如果顺序为1-3-2，则在3执行完毕，2未执行之前，被线程2抢占，这时instance已经非null了（但是却没有初始化），使得线程2调用getSingleton()方法时直接返回instance，造成错误的结果。</p>
+<p>可以使用Volatile修复这个问题，volatile的两个作用：<strong>1.保持可见性，保证线程在本地不会有instance的副本，每次都是去主内存中读取； 2. 禁止指令重排序优化</strong>。在volatile变量的赋值操作后面会有一个内存屏障（生成的汇编代码），读操作不会重排序到内存屏障之前，在上面的例子中，取操作必须在执行完1-2-3之后或者1-3-2之后，不存在执行到1-3然后取到值的情况。从“先行发生原则”角度理解，就是对一个volatile变量的写操作读先行发生于后面对这个变量的读操作（这里的”后面“指时间上的先后顺序）。</p>
+<pre><code>publlic class Singleton {
+    private static volatile Singleton instance;
+    private Singleton() {}
+
+    public static Singleton getSingleton()｛
+        if（instance == null） {
+            synchronized(Singleton.class) {
+                if (insance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    ｝
+}
+</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmbzgk990000vsyy64gh4gzw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmbzkldg0001e4yyzdxx2qd5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -140,7 +175,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmbzgka80002vsyyu4rcljcz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmbzkldo0003e4yyq97eqojb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -176,7 +211,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmbzgkab0003vsyyn4m0ga9v" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmbzkldl0002e4yyip1robm8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -221,7 +256,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmbzgka30001vsyyd54etdp9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmbzklcm0000e4yyfmptmxfx" class="article-share-link">Share</a>
       
       
     </footer>
