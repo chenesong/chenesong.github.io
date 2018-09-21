@@ -84,11 +84,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>public class Singleton { </p>
+<pre><code>private static Singleton instance; 
+private Singleton() {}
+
+public static synchronized Singleton getInstance() {
+    if (instance == null) {
+        instance = new Singleton();
+    }
+
+    return instance;
+}
+</code></pre><p>}</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbsohaq0000c8yy7luztey9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern/" data-id="cjmbt8cbl0000kkyysiggipj2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -124,7 +136,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmbsohb40002c8yyoff0atyi" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmbt8cby0002kkyysjaxkq8r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -160,7 +172,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmbsohb70003c8yycm61a9ug" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmbt8cc10003kkyyjft62tap" class="article-share-link">Share</a>
       
       
     </footer>
@@ -205,7 +217,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmbsohaz0001c8yyvaj1mg2n" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmbt8cbt0001kkyyttqd9lnz" class="article-share-link">Share</a>
       
       
     </footer>
