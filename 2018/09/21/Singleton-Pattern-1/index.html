@@ -5,15 +5,19 @@
   
 
   
-  <title>Archives: 2018/9 | Hexo</title>
+  <title>Singleton Pattern | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2018/09/index.html">
+  <meta name="description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  第一种方式（懒汉方式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchroni">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Singleton Pattern">
+<meta property="og:url" content="http://yoursite.com/2018/09/21/Singleton-Pattern-1/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  第一种方式（懒汉方式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchroni">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-21T10:05:11.662Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Singleton Pattern">
+<meta name="twitter:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  第一种方式（懒汉方式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchroni">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -60,97 +64,67 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/21/Singleton-Pattern-1/" class="archive-article-date">
-  <time datetime="2018-09-21T10:04:15.000Z" itemprop="datePublished">Sep 21</time>
+        <section id="main"><article id="post-Singleton-Pattern-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/21/Singleton-Pattern-1/" class="article-date">
+  <time datetime="2018-09-21T10:04:15.000Z" itemprop="datePublished">2018-09-21</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/21/Singleton-Pattern-1/">Singleton Pattern</a>
+    <h1 class="article-title" itemprop="name">
+      Singleton Pattern
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-my blog">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/21/my-blog/" class="archive-article-date">
-  <time datetime="2018-09-21T08:15:17.000Z" itemprop="datePublished">Sep 21</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/21/my-blog/">my blog</a>
-    </h1>
-  
+        <hr>
+<p>主要参考：<a href="https://blog.csdn.net/cuiran/article/details/52299756" target="_blank" rel="noopener">https://blog.csdn.net/cuiran/article/details/52299756</a></p>
+<hr>
+<p>第一种方式（懒汉方式），线程同步：</p>
+<pre><code>public class Singleton { 
+    private static Singleton instance; 
+    private Singleton() {}
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/21/test-my-site/" class="archive-article-date">
-  <time datetime="2018-09-21T08:12:52.000Z" itemprop="datePublished">Sep 21</time>
-</a>
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+</code></pre><p>缺点：虽然线程同步，但是会</p>
+
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/21/test-my-site/">test_my_site</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2018/09/21/hello-world/" class="archive-article-date">
-  <time datetime="2018-09-21T07:58:55.137Z" itemprop="datePublished">Sep 21</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmbua8xf0000vsyyrx3ynuh3" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/09/21/hello-world/">Hello World</a>
-    </h1>
-  
-
-    </header>
+      
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/09/21/my-blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">my blog</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
