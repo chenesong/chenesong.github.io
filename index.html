@@ -88,7 +88,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc194u00001okyy0shijp87" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc1jtdz0001dsyyc3wc1rgz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -170,8 +170,12 @@
         return instance;
     ｝
 }
-</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建实例本身是线程安全的。<br>    public class Singleton｛<br>        // 类加载时就初始化<br>        private static final Singleton instance = new Singleton();</p>
-<pre><code>    private Singleton() {}
+</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建实例本身是线程安全的。</p>
+<pre><code>public class Singleton｛
+    // 类加载时就初始化
+    private static final Singleton instance = new Singleton();
+
+    private Singleton() {}
 
     public static Singleton getInstance() {
         return instance;
@@ -201,7 +205,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc194t50000okyysghuoccn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc1jtd50000dsyykq2tbwvq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc194u00002okyyyf5clbws" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc1jte70003dsyynpnu498g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -273,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc194ug0004okyyfa4yjxm2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc1jtea0004dsyywchd93ax" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc194u00003okyyj9wvvbbx" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc1jte40002dsyy72a2n4wj" class="article-share-link">Share</a>
       
       
     </footer>

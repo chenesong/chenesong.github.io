@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  方式一（懒汉模式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchronize">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T13:10:14.213Z">
+<meta property="og:updated_time" content="2018-09-21T13:28:02.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Singleton Pattern">
 <meta name="twitter:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  方式一（懒汉模式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchronize">
@@ -136,8 +136,12 @@
         return instance;
     ｝
 }
-</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建实例本身是线程安全的。<br>    public class Singleton｛<br>        // 类加载时就初始化<br>        private static final Singleton instance = new Singleton();</p>
-<pre><code>    private Singleton() {}
+</code></pre><p>方式三（static final field）饿汉式：<br>因为单例的实例被声明为static和final变量，在第一次加载类到内存中时就会初始化，所有创建实例本身是线程安全的。</p>
+<pre><code>public class Singleton｛
+    // 类加载时就初始化
+    private static final Singleton instance = new Singleton();
+
+    private Singleton() {}
 
     public static Singleton getInstance() {
         return instance;
@@ -167,7 +171,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc194t50000okyysghuoccn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc1jtd50000dsyykq2tbwvq" class="article-share-link">Share</a>
       
       
     </footer>
