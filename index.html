@@ -62,6 +62,42 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-ThreadLocal" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/09/21/ThreadLocal/" class="article-date">
+  <time datetime="2018-09-21T13:20:19.000Z" itemprop="datePublished">2018-09-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/09/21/ThreadLocal/">ThreadLocal</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc194u00001okyy0shijp87" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Singleton-Pattern-1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/09/21/Singleton-Pattern-1/" class="article-date">
@@ -99,7 +135,7 @@
         return instance;
     }
 }
-</code></pre><p>缺点：虽然保证了线程同步，但是并不高效，因为使用synchronized修饰后，任何时候只能有一个线程调用getInstance()方法，其余线程均属于阻塞状态，但是同步操作只有在第一次创建单例实例对象才需要，后续并不需要同步操作，为解决此问题，因此提出下面的双重检验锁模式（Double checked locking pattern）。</p>
+</code></pre><p>缺点：虽然保证了线程同步，但并不高效，因为任何时刻只能有一个线程调用getInstance()方法，同步操作只有在第一次创建单例实例对象时才需要，后续并不需要，为解决此问题，因此提出下面的双重检验锁模式（Double checked locking pattern）。</p>
 <p>方式二(双重检验锁模式）：</p>
 <p>使用同步块加锁的方式，有两次instance == null检测，一次是在同步块外边，另一次是在同步块内。在同步块内还需要进行检测的原因：可能有多个线程一起进入同步块外的if，如果同步块内不进行检测，可能会生成多个实例。如果之前操作已经生成了一个实例，同步块外的if条件不满足，不会进入同步块中，克服了第一种方式的缺点。</p>
 <pre><code>public class Singleton { 
@@ -165,7 +201,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc0heis0000xcyyg6qrce9e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc194t50000okyysghuoccn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -201,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc0hejr0002xcyyu5mtiy5a" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmc194u00002okyyyf5clbws" class="article-share-link">Share</a>
       
       
     </footer>
@@ -237,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc0heju0003xcyy6mm2dv3r" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/test-my-site/" data-id="cjmc194ug0004okyyfa4yjxm2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -282,7 +318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc0hejn0001xcyybj3pqib8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/hello-world/" data-id="cjmc194u00003okyyj9wvvbbx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -321,6 +357,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/09/21/ThreadLocal/">ThreadLocal</a>
+          </li>
         
           <li>
             <a href="/2018/09/21/Singleton-Pattern-1/">Singleton Pattern</a>

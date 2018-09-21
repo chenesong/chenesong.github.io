@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  方式一（懒汉模式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchronize">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T12:58:29.596Z">
+<meta property="og:updated_time" content="2018-09-21T13:10:14.213Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Singleton Pattern">
 <meta name="twitter:description" content="主要参考：https://blog.csdn.net/cuiran/article/details/52299756  方式一（懒汉模式），线程同步： public class Singleton {      private static Singleton instance;      private Singleton() {}      public static synchronize">
@@ -101,7 +101,7 @@
         return instance;
     }
 }
-</code></pre><p>缺点：虽然保证了线程同步，但是并不高效，因为使用synchronized修饰后，任何时候只能有一个线程调用getInstance()方法，其余线程均属于阻塞状态，但是同步操作只有在第一次创建单例实例对象才需要，后续并不需要同步操作，为解决此问题，因此提出下面的双重检验锁模式（Double checked locking pattern）。</p>
+</code></pre><p>缺点：虽然保证了线程同步，但并不高效，因为任何时刻只能有一个线程调用getInstance()方法，同步操作只有在第一次创建单例实例对象时才需要，后续并不需要，为解决此问题，因此提出下面的双重检验锁模式（Double checked locking pattern）。</p>
 <p>方式二(双重检验锁模式）：</p>
 <p>使用同步块加锁的方式，有两次instance == null检测，一次是在同步块外边，另一次是在同步块内。在同步块内还需要进行检测的原因：可能有多个线程一起进入同步块外的if，如果同步块内不进行检测，可能会生成多个实例。如果之前操作已经生成了一个实例，同步块外的if条件不满足，不会进入同步块中，克服了第一种方式的缺点。</p>
 <pre><code>public class Singleton { 
@@ -167,7 +167,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc0heis0000xcyyg6qrce9e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/Singleton-Pattern-1/" data-id="cjmc194t50000okyysghuoccn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -175,6 +175,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/09/21/ThreadLocal/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ThreadLocal
+        
+      </div>
+    </a>
   
   
     <a href="/2018/09/21/my-blog/" id="article-nav-older" class="article-nav-link-wrap">
@@ -214,6 +223,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/09/21/ThreadLocal/">ThreadLocal</a>
+          </li>
         
           <li>
             <a href="/2018/09/21/Singleton-Pattern-1/">Singleton Pattern</a>
