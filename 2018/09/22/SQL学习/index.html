@@ -7,14 +7,17 @@
   
   <title>SQL学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
+  <meta name="description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
+<meta property="og:type" content="article">
 <meta property="og:title" content="SQL学习">
 <meta property="og:url" content="http://yoursite.com/2018/09/22/SQL学习/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-22T08:04:11.686Z">
+<meta property="og:updated_time" content="2018-09-22T08:51:17.303Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL学习">
+<meta name="twitter:description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -83,11 +86,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><strong>Join Expression</strong></p>
+<p>The <strong>on</strong> condition allows a general predicate over the relations being joined.</p>
+<pre><code>select *
+from student join takes on student.ID = takes.ID;
+</code></pre><p>The on condition above specifies that a tuple from student matches a tuple from takes if their ID values are equal.<br>这与natural join很相似，但有一点不同：<strong>join … on</strong> 方式的结果中tuples有2个相同的ID。其与下面方式生成的结果一致：</p>
+<pre><code>select *
+from student, takes
+where student.ID = takes.ID；
+</code></pre><p>可以通过下面方式只选择一个ID：</p>
+<pre><code>select student.ID as ID, name, dept_name, tot_cred,
+       course_id, sec_id, semester, year, grade
+from student join takes on student.ID = takes.ID;
+</code></pre><p><strong>Outer joins</strong></p>
+<p>由于natural join只会join在两个relations中有相同属性的tuples，会造成某些tuples没有选择，比如某一学生没有上课，当student与takes进行natural join时，该学生信息不会被选择。</p>
+<pre><code>select *
+from student natural join takes;
+</code></pre><p>解决方法：使用outer join</p>
+<ol>
+<li><p>The <strong>left outer join</strong> preserves tuples only in the relation nameed before (to the left of) the left outer join operation.</p>
+</li>
+<li><p>The <strong>right outer join</strong> preserves tuple only in the relation named after(to the right of) the right outer join operation.</p>
+</li>
+<li><p>The <strong>full outer join</strong> preserves tuple in both relations.</p>
+</li>
+</ol>
+<p>Incontrast, the join operations we studied earlier that do not preserve nonmatched tuples are called <strong>inner join</strong> operations。</p>
+<pre><code>select *
+from student natural left outer join takes;
+</code></pre><p>使用这种方式，没有上课的学生也会出现在最终的relation中，只是上课属性值均为null。</p>
+<p>full outer join 示例：”Display a list of all students in the Comp.Sci. department, along with the course sections, if any, that they have taken in Spring 2009; all course sections from Spring 2009 must be displayed, even if no student from the Comp.Sci. department has taken the course<br>section.”</p>
+<pre><code>select *
+from (select *
+where dept_name = &apos;Comp.Sci&apos;)
+natural full outer join
+(select *
+ from takes
+ where semester = &apos;Spring&apos; and year = 2009);
+</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/22/SQL学习/" data-id="cjmd6wu2i00000oyycglpjimu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/22/SQL学习/" data-id="cjmd72zy90000wkyysmi5jpgw" class="article-share-link">Share</a>
       
       
     </footer>
