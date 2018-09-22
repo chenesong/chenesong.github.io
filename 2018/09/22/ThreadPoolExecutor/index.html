@@ -5,16 +5,19 @@
   
 
   
-  <title>my blog | Hexo</title>
+  <title>ThreadPoolExecutor | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="my blog">
-<meta property="og:url" content="http://yoursite.com/2018/09/21/my-blog/index.html">
+  <meta name="description" content="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md 阿里巴巴Java手册上有一条：线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。 使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadPoolExecutor">
+<meta property="og:url" content="http://yoursite.com/2018/09/22/ThreadPoolExecutor/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md 阿里巴巴Java手册上有一条：线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。 使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T08:15:18.004Z">
+<meta property="og:updated_time" content="2018-09-22T03:38:24.892Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="my blog">
+<meta name="twitter:title" content="ThreadPoolExecutor">
+<meta name="twitter:description" content="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md 阿里巴巴Java手册上有一条：线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。 使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -61,10 +64,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="my blog-my-blog" class="article article-type-my blog" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-ThreadPoolExecutor" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2018/09/21/my-blog/" class="article-date">
-  <time datetime="2018-09-21T08:15:17.000Z" itemprop="datePublished">2018-09-21</time>
+    <a href="/2018/09/22/ThreadPoolExecutor/" class="article-date">
+  <time datetime="2018-09-22T03:30:35.000Z" itemprop="datePublished">2018-09-22</time>
 </a>
     
   </div>
@@ -75,7 +78,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      my blog
+      ThreadPoolExecutor
     </h1>
   
 
@@ -83,11 +86,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><a href="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md" target="_blank" rel="noopener">https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md</a></p>
+<p>阿里巴巴Java手册上有一条：<strong>线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。</strong></p>
+<p>使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内存或者“过度切换”问题。</p>
+<p>简单来说使用线程池有以下几个目的：</p>
+<ol>
+<li>线程是稀缺资源，不能频繁创建。</li>
+<li>解耦作用：线程的创建与执行完全分开，方便维护。</li>
+<li>应当将线程放入线程池中，可以给其他任务进行复用。</li>
+</ol>
+<p>常见的创建线程池的方式有以下几种：</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/my-blog/" data-id="cjmcvx06x0002u8yy2sd49c0w" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/22/ThreadPoolExecutor/" data-id="cjmcvx06r0001u8yytbqrks49" class="article-share-link">Share</a>
       
       
     </footer>
@@ -96,19 +109,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2018/09/21/Singleton-Pattern-1/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Singleton Pattern
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/09/21/test-my-site/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/09/21/ThreadLocal/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">test_my_site</div>
+      <div class="article-nav-title">ThreadLocal</div>
     </a>
   
 </nav>

@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="参考： http://www.cnblogs.com/dolphin0520/p/3920407.html ThreadLocal（线程本地变量或线程本地存储），为每个变量在每个线程中都创建一个副本，即每个线程都可以访问自己内部的副本变量。 示例： class ConnectionManager {     private static Connection connect = null;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-21T15:13:25.267Z">
+<meta property="og:updated_time" content="2018-09-22T03:01:17.595Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadLocal">
 <meta name="twitter:description" content="参考： http://www.cnblogs.com/dolphin0520/p/3920407.html ThreadLocal（线程本地变量或线程本地存储），为每个变量在每个线程中都创建一个副本，即每个线程都可以访问自己内部的副本变量。 示例： class ConnectionManager {     private static Connection connect = null;">
@@ -145,11 +145,240 @@ public void set(T value) {}
 public void remvoe() {}
 protected T initialValue() {}
 </code></pre><p>get()方法用来获取ThreadLocal在当前线程中保存的变量副本，set()用来设置当前线程中的变量副本，remove()用来移除当前线程中变量的副本，initialValue()是一个protected方法，一般在使用时进行重载，它是一个延迟加载方法。</p>
+<p>get方法的实现：</p>
+<pre><code>/**
+ * Returns the value in the current thread&apos;s copy of this
+ * thread-local variable.  If the variable has no value for the
+ * current thread, it is first initialized to the value returned
+ * by an invocation of the {@link #initialValue} method.
+ *
+ * @return the current thread&apos;s value of this thread-local
+ */
+public T get() {
+    Thread t = Thread.currentThread(); // （1）
+    ThreadLocalMap map = getMap(t);
+    if (map != null) {
+        ThreadLocalMap.Entry e = map.getEntry(this); // （2）
+        if (e != null) {
+            @SuppressWarnings(&quot;unchecked&quot;)
+            T result = (T)e.value;
+            return result;
+        }
+    }
+    return setInitialValue();
+}
+</code></pre><p>（1)处为获得当前线程，然后通过getMap(t)方法获取一个map，map的类型为ThreadLocalMap。然后（2）处获取键值对。</p>
+<blockquote>
+<p>注意这里传进去的是this引用,而不是当前线程t。</p>
+</blockquote>
+<p>首先看一下getMap方法中做了什么：</p>
+<pre><code>/**
+ * Get the map associated with a ThreadLocal. Overridden in
+ * InheritableThreadLocal.
+ *
+ * @param  t the current thread
+ * @return the map
+ */
+ThreadLocalMap getMap(Thread t) {
+    return t.threadLocals;
+}
+</code></pre><p>在getMap()中，调用当前线程t，返回当前线程t中的一个成员变量threadLocal。</p>
+<p>我们继续去Thread类中看下成员变量threadLocals是什么：</p>
+<pre><code>/* ThreadLocal values pertaining to this thread. This map is maintained
+ * by the ThreadLocal class. */
+ThreadLocal.ThreadLocalMap threadLocals = null;
+</code></pre><p>实际上是一个ThreadLocalMap，这个类是ThreadLocal类的一个内部类，我们继续去看ThreadLocalMap的实现：</p>
+<pre><code>static class ThreadLocalMap {
+    /**
+     * The entries in this hash map extend WeakReference, using
+     * its main ref field as the key (which is always a
+     * ThreadLocal object).  Note that null keys (i.e. entry.get()
+     * == null) mean that the key is no longer referenced, so the
+     * entry can be expunged from table.  Such entries are referred to
+     * as &quot;stale entries&quot; in the code that follows.
+     */
+    static class Entry extends WeakReference&lt;ThreadLocal&lt;?&gt;&gt; {
+        /** The value associated with this ThreadLocal. */
+        Object value;
+
+        Entry(ThreadLocal&lt;?&gt; k, Object v) {
+            super(k);
+            value = v;
+        }
+    }
+</code></pre><p>可以看到</p>
+<p>至此，可能大部分朋友明白了ThreadLocal是如何为每个线程创建变量副本的：首先，在每个线程Thread内部有一个ThreadLocal.ThreadLocalMap类型的成员变量threadLocals，这个threadLocals就是用来存储实际的变量副本的，键值为当前ThreadLocal变量，value为变量副本（即T类型变量）。</p>
+<p>初始时，在Thread里面，threadLocals为空，当通过ThreadLocal变量调用get()方法或者set()方法，就会对Thread类中的threadLocals进行初始化，并且以当前ThreadLocal变量为键值，以ThreadLocal要保存的副本变量为value，存到threadLocals。</p>
+<p>然后在当前线程里面，如果要使用副本变量，就可以通过get()方法在threadLocals里面查找。</p>
+<p>下面通过一个例子来证明通过ThreadLocal能达到在每个线程中创建变量副本的效果：</p>
+<pre><code>public class Test {
+ThreadLocal&lt;Long&gt;   longLocal   = new ThreadLocal&lt;&gt;();
+ThreadLocal&lt;String&gt; stringLocal = new ThreadLocal&lt;&gt;();
+
+public void set() {
+    longLocal.set(Thread.currentThread().getId());
+    stringLocal.set(Thread.currentThread().getName());
+}
+
+public long getLong() {
+    return longLocal.get();
+}
+
+public String getString() {
+    return stringLocal.get();
+}
+
+public static void main(String[] args) throws InterruptedException {
+    final Test test = new Test();
+
+    test.set();
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+
+    Thread thread1 = new Thread(() -&gt; { test.set(); 
+                                        System.out.println(test.getLong());
+                                        System.out.println(test.getString());});
+    thread1.start();
+    thread1.join();
+
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+
+}
+</code></pre><p>}</p>
+<p>输出结果：</p>
+<pre><code>1
+main
+11
+thread-0
+1
+main
+</code></pre><p>从这段代码的结果可以看出，在main线程和thread1线程中，longLocal保存的副本值和stringLocal保持的副本值都不一样。</p>
+<p><strong>总结：</strong><br>（1）通过ThreadLocal创建的副本是存储在每个线程自己的threadLocals中的；<br>（2) 为何threadLocals的类型ThreadLocalMap的键值为ThreadLocal对象，因为每个线程中可能有多个threadLocal本地变量，就像上面代码中的longLocal和stringLocal；<br>（3）在进行get之前，必须先set，否则会报空指针异常，如果想在get之前不需要调用set就能正常访问的话，必须重写initialValue()方法。</p>
+<p>因为在上面的代码分析中，我们发现如果没有先set的话，即在map中查找不到对应的存储，则会通过调用setInitialValue()方法返回i，而在setInitialValue方法中，有一个语句是</p>
+<pre><code>T value = initialValue();
+</code></pre><p>而默认情况下，initialValue()返回的是null。</p>
+<pre><code>public T get() {
+    Thread t = Thread.currentThread();
+    ThreadLocalMap map = getMap(t);
+    if (map != null) {
+        ThreadLocalMap.Entry e = map.getEntry(this);
+        if (e != null) {
+            @SuppressWarnings(&quot;unchecked&quot;)
+            T result = (T)e.value;
+            return result;
+        }
+    }
+    return setInitialValue();
+}
+
+/**
+ * Variant of set() to establish initialValue. Used instead
+ * of set() in case user has overridden the set() method.
+ *
+ * @return the initial value
+ */
+private T setInitialValue() {
+    T value = initialValue();
+    Thread t = Thread.currentThread();
+    ThreadLocalMap map = getMap(t);
+    if (map != null)
+        map.set(this, value);
+    else
+        createMap(t, value);
+    return value;
+}
+</code></pre><p>看下面这个例子：</p>
+<pre><code>public class Test {
+ThreadLocal&lt;Long&gt; longLocal = new ThreadLocal&lt;&gt;();
+ThreadLocal&lt;String&gt; stringLocal = new ThreadLocal&lt;&gt;();
+
+public void set() {
+    longLocal.set(Thread.currentThread().getId());
+    stringLocal.set(Thread.currentThread().getName());
+}
+
+public long getLong() {
+    return longLocal.get();
+}
+
+public String getString() {
+    return stringLocal.get();
+}
+
+public static void main(String[] args) throws InterruptedException {
+    final Test test = new Test();
+
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+
+    Thread thread1 = new Thread(() -&gt; {
+        test.set();
+        System.out.println(test.getLong());
+        System.out.println(test.getString());
+    });
+
+    thread1.start();
+    thread1.join();
+
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+}
+</code></pre><p>}</p>
+<p>结果：“Exception in thread “main” java.lang.NullPointerException”，因为在main线程中没有先set(), 而直接get(),运行时会报空指针异常。</p>
+<p>可以通过重写initialValue的方式解决该问题：</p>
+<pre><code>public class Test {
+ThreadLocal&lt;Long&gt; longLocal = new ThreadLocal&lt;Long&gt;() {
+    @Override
+    protected Long initialValue() {
+        return Thread.currentThread().getId();
+    }
+};
+
+ThreadLocal&lt;String&gt; stringLocal = new ThreadLocal&lt;String&gt;() {
+    @Override
+    protected String initialValue() {
+        return Thread.currentThread().getName();
+    }
+};
+
+public void set() {
+    longLocal.set(Thread.currentThread().getId());
+    stringLocal.set(Thread.currentThread().getName());
+}
+
+public long getLong() {
+    return longLocal.get();
+}
+
+public String getString() {
+    return stringLocal.get();
+}
+
+public static void main(String[] args) throws InterruptedException {
+    final Test test = new Test();
+
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+
+    Thread thread1 = new Thread(() -&gt; {
+        test.set();
+        System.out.println(test.getLong());
+        System.out.println(test.getString());
+    });
+
+    thread1.start();
+    thread1.join();
+
+    System.out.println(test.getLong());
+    System.out.println(test.getString());
+}
+</code></pre><p>}</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmc5aku70001jsyy0lmi48hs" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/21/ThreadLocal/" data-id="cjmcvx05v0000u8yyl3a6n9kv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -157,6 +386,15 @@ protected T initialValue() {}
   
     
 <nav id="article-nav">
+  
+    <a href="/2018/09/22/ThreadPoolExecutor/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ThreadPoolExecutor
+        
+      </div>
+    </a>
   
   
     <a href="/2018/09/21/Singleton-Pattern-1/" id="article-nav-older" class="article-nav-link-wrap">
@@ -198,6 +436,10 @@ protected T initialValue() {}
       <ul>
         
           <li>
+            <a href="/2018/09/22/ThreadPoolExecutor/">ThreadPoolExecutor</a>
+          </li>
+        
+          <li>
             <a href="/2018/09/21/ThreadLocal/">ThreadLocal</a>
           </li>
         
@@ -211,10 +453,6 @@ protected T initialValue() {}
         
           <li>
             <a href="/2018/09/21/test-my-site/">test_my_site</a>
-          </li>
-        
-          <li>
-            <a href="/2018/09/21/hello-world/">Hello World</a>
           </li>
         
       </ul>
