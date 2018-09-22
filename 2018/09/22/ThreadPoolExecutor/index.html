@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md 阿里巴巴Java手册上有一条：线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。 使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-22T03:38:24.892Z">
+<meta property="og:updated_time" content="2018-09-22T12:30:25.288Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ThreadPoolExecutor">
 <meta name="twitter:description" content="https://github.com/crossoverJie/JCSprout/blob/master/MD/ThreadPoolExecutor.md 阿里巴巴Java手册上有一条：线程资源必须通过线程池提供，不允许在应用中自行显式创建线程。 使用线程池的好处是减少在创建和销毁线程上所花的时间以及系统资源的开销，解决资源不足的问题。如果不使用线程池，有可能造成系统创建大量同类线程而导致消耗完内">
@@ -96,11 +96,21 @@
 <li>应当将线程放入线程池中，可以给其他任务进行复用。</li>
 </ol>
 <p>常见的创建线程池的方式有以下几种：</p>
+<p>Executors.newCachedThreadPool(): 不限容线程池。</p>
+<p>Executors.newFixedThreadPool(): 创建固定大小的线程池。</p>
+<p>Executors.newSingleThreadExecutor(): 创建单个线程的线程池。</p>
+<p>其实看这三种方式创建的源码就会发现：</p>
+<pre><code>public static ExecutorService newCachedThreadPool() {
+    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                  60L, TimeUnit.SECONDS,
+                                  new SynchronousQueue&lt;Runnable&gt;());
+}
+</code></pre><p>实际上还是利用Thread</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/22/ThreadPoolExecutor/" data-id="cjmd72zze0003wkyyx1yvltm7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/22/ThreadPoolExecutor/" data-id="cjmdhep9100028wyyag4app0p" class="article-share-link">Share</a>
       
       
     </footer>

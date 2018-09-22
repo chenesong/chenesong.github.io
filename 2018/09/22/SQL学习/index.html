@@ -7,17 +7,17 @@
   
   <title>SQL学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
+  <meta name="description" content="select语句 消除重复元素（默认为保留重复的元素）: select distinct dept_name from instructor; 示例 select ID, name, dept_name, salary * 1.1 from instructor; However, that it does not result in any change to theinstructor rel">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL学习">
 <meta property="og:url" content="http://yoursite.com/2018/09/22/SQL学习/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
+<meta property="og:description" content="select语句 消除重复元素（默认为保留重复的元素）: select distinct dept_name from instructor; 示例 select ID, name, dept_name, salary * 1.1 from instructor; However, that it does not result in any change to theinstructor rel">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-22T08:51:17.303Z">
+<meta property="og:updated_time" content="2018-09-22T13:40:19.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL学习">
-<meta name="twitter:description" content="Join Expression The on condition allows a general predicate over the relations being joined. select * from student join takes on student.ID = takes.ID; The on condition above specifies that a tuple fr">
+<meta name="twitter:description" content="select语句 消除重复元素（默认为保留重复的元素）: select distinct dept_name from instructor; 示例 select ID, name, dept_name, salary * 1.1 from instructor; However, that it does not result in any change to theinstructor rel">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,11 +86,168 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>Join Expression</strong></p>
+        <p><strong>select语句</strong></p>
+<p>消除重复元素（默认为保留重复的元素）:</p>
+<pre><code>select distinct dept_name
+from instructor;
+</code></pre><p>示例</p>
+<pre><code>select ID, name, dept_name, salary * 1.1
+from instructor;
+</code></pre><p>However, that it does not result in any change to the<br>instructor relation.</p>
+<p><strong>where语句</strong></p>
+<p>The where clause allows us to select only those rows in the result relation of<br>the from clause that satisfy a specified predicate.</p>
+<pre><code>select name
+from instructor
+where dept_name = &apos;Comp.Sci.&apos; and salary &gt; 70000;
+</code></pre><p>SQL allows the use of the logical connectives <strong>and</strong>, <strong>or</strong>, and <strong>not</strong> in the where<br>clause.</p>
+<p><strong>在多个relations间进行查询</strong></p>
+<p>we list the relations that need to be accessed<br>in the from clause, and specify the matching condition in the where clause。</p>
+<pre><code>select name, instructor.dept_name, building
+from instructor, department
+where insturctor.dept_name = department.dept_name;
+</code></pre><ol>
+<li><p>The <strong>select</strong> clause is used to list the attributes desired in the result of query.</p>
+</li>
+<li><p>The <strong>from</strong> clause is a list of the relations to be accessed in the evaluation of the query.</p>
+</li>
+<li><p>The <strong>where</strong> clause is a predicate involving attributes of the relation in the from clause.</p>
+<p> select A1, A2, …, An</p>
+<p> from r1, r2, …, rm</p>
+<p> where P;</p>
+</li>
+</ol>
+<p><strong>natural join</strong></p>
+<p>natural join considers<br>only those pairs of tuples with the same value on those attributes that appear in<br>the schemas of both relations.</p>
+<pre><code>select name, course_id
+from instructor, teaches
+where instructor.ID = teaches.ID;
+</code></pre><p>等价于</p>
+<pre><code>select name, course_id
+from insturctor natural join teaches;
+</code></pre><p>A from clause in an SQL query can have multiple relations combined using natural join, as shown here:</p>
+<pre><code>select A1, A2, ..., An
+from r1 natural join r2 natural join ... natural join rm
+where P;
+</code></pre><p>To provide the benefit of natural join while avoiding the danger of equating attributes erroneously, SQL provides a form of the natural join construct that allows you to specify exactly which columns should be equated:</p>
+<pre><code>select name, title
+from (instructor natural join teaches) join course using (course_id);
+</code></pre><p>The operation is similar to r1 natural join r2, except that a<br>pair of tuples t1 from r1 and t2 from r2 match if t1.A1 = t2.A1 and t1.A2 = t2.A2; even<br>if r1 and r2 both have an attribute named A3, <strong>it is not required that t1.A3 = t2.A3.</strong></p>
+<p><strong>重命名</strong></p>
+<pre><code>select name as instructor_name, course_id
+from insturctor, teaches
+where instructor.ID = teaches.ID;
+</code></pre><p>“Find the names of all instructors whose salary is greater than at least one instructor in the Biology department.”</p>
+<pre><code>select distinct T.name
+from instructor as T, instructor as S
+where T.salary &gt; S.salary and S.dept_name = &apos;Biology&apos;;
+</code></pre><p><strong>String操作</strong></p>
+<p>使用单引号，如’Computer’，如果一个单引号是字符串的一部分，则使用双引号表示，如：“It’s right”表示成”It’’s right”。 MySQL and SQL Server, do not distinguish uppercase from lowercase when matching strings。</p>
+<p>Pattern matching can be performed on strings, using the operator like. We describe patterns by using two special characters:</p>
+<p>%： The % character mathces any substring.</p>
+<p>_： The _ character matches any character.</p>
+<p>“Find the names of all departments whose building name includes the substring ‘Watson’.”：</p>
+<pre><code>select dept_name
+from department
+where building like &apos;%Watson%&apos;;
+</code></pre><p><strong>转义字符：’\’</strong></p>
+<p>like ‘ab\%cd%’ escape ‘\’ matches all strings beginning with “ab%cd”.</p>
+<p>like ‘ab\cd%’ escape ‘\’ mathches all strings begging with “ab\cd”.</p>
+<p><strong>Ordering the Display of Tuples</strong></p>
+<pre><code>select name
+from instructor
+where dept_name = &apos;Physics&apos;
+order by name;
+</code></pre><p>By default, the order by clause lists items in ascending order. To specify the sort order, we may specify <strong>desc</strong> for descending order or <strong>asc</strong> for ascending order.</p>
+<p>Suppose that we wish to list the entire instructor relation in descending order of salary. If several instructors have the same salary, we order them in ascending order by name. We express this query in SQL as follows:</p>
+<pre><code>select *
+from instructor
+order by salary desc, name asc;
+</code></pre><p><strong>Where Clause Predicates</strong></p>
+<pre><code>select name
+from instructor
+where salary between 9000 and 10000;
+</code></pre><p>instead of:</p>
+<pre><code>select name
+from instructor
+where salary &lt;= 100000 and salary &gt;= 90000;
+</code></pre><p>也可使用not between。</p>
+<p>SQL permits us to use the notation (v1, v2, . . . , vn) to denote a tuple of arity n<br>containing values v1, v2, . . . , vn. The comparison operators can be used on tuples,<br>and the ordering is defined lexicographically. For example, <strong>(a1, a2) &lt;= (b1, b2) is true if a1 &lt;= b1 and a2 &lt;= b2;</strong> similarly, <strong>the two tuples are equal if all their attributes are equal.</strong></p>
+<pre><code>select name, course_id
+from instructor, teaches
+where (instructor.ID， dept_name) = (teaches.ID, &apos;Biology&apos;）；
+</code></pre><p>instead of:</p>
+<pre><code>select name, course_id
+from instructor, teaches
+where instructor.ID = teaches.ID and dept_name = &apos;Biology&apos;;
+</code></pre><p><strong>Set Operations</strong></p>
+<p><strong>The Union Operation</strong>: To find the set of all courses taught either in Fall 2009 or in Spring 2010, or both, we write:</p>
+<pre><code>(select course_id
+ from section
+ where semester = &apos;Fall&apos; and year = 2009)
+ union
+(select course_id
+ from section
+ where semester = &apos;Spring&apos; and year = 2010);
+</code></pre><p>The union operation automatically eliminates duplicates。</p>
+<p><strong>The Intersect Operation</strong></p>
+<p>To find the set of all courses taught in the Fall 2009 as well as in Spring 2010 we write：</p>
+<pre><code>(select course_id
+ from section
+ where semester = &apos;Fall&apos; and year = 2009)
+ intersect
+(select course_id
+ from section
+ where semester = &apos;Spring&apos; and year = 2010)；
+</code></pre><p><strong>The Except Operation</strong></p>
+<p>To find all courses taught in the Fall 2009 semester but not in the Spring 2010 semester, we write:</p>
+<pre><code>(select course_id
+ from section
+ where semester = &apos;Fall&apos; and year = 2009)
+ except
+(select course_id
+ from section
+ where semester = &apos;Spring&apos; and year = 2010)；
+</code></pre><p><strong>Aggregate Functions</strong></p>
+<p>Average: avg</p>
+<p>Minimum： min</p>
+<p>Maximum: max</p>
+<p>Total: sum</p>
+<p>Count: count</p>
+<p>The input to sum and avg must be a collection of <strong>numbers</strong>, but the other operators can operate on collections of <strong>nonnumeric data types</strong>, such as strings, as well.</p>
+<p>“Find the average salary of instructors in the Computer Science department.” </p>
+<pre><code>select avg(salary) as avg_salary
+from instructor
+where dept_name = &apos;Comp.Sci.&apos;;
+</code></pre><p>If we do want to eliminate duplicates, we use the keyword <strong>distinct</strong> in the aggregate expression. An example arises in the query “Find the total number of instructors who teach a course in the Spring 2010 semester.</p>
+<pre><code>select count(distinct ID)
+from teaches
+where semester = &apos;Spring&apos; and year = 2010;
+</code></pre><p>We use the aggregate function count frequently to count the number of tuples in a relation.</p>
+<pre><code>select count（*)
+from course;
+</code></pre><p><strong>Aggregation with Grouping</strong></p>
+<p>There are circumstances where we would like to apply the aggregate function not only to a single set of tuples, but also to a group of sets of tuples; we specify this wish in SQL using the group by clause. </p>
+<p>“Find the average salary in each department.” :</p>
+<pre><code>select dept_name, avg（salary) as avg_salary
+from instructor
+group by dept_name;
+</code></pre><p>“Find the number of instructors in each department who teach a course in the Spring 2010 semester.”</p>
+<pre><code>select dept_name, count（distinct ID) as instr_count
+from instructor natural join teaches
+where semester = &apos;Spring&apos; and year = 2010
+group by dept_name;
+</code></pre><p>we might be interested in only those departments where the<br>average salary of the instructors is more than $42,000. </p>
+<pre><code>select dept_name, avg(salary) as avg_salary
+from instructor
+group by dept_name
+having avg(salary）&gt; 42000;
+</code></pre><p><strong>Nested Subqueries</strong></p>
+<p><strong>Join Expression</strong></p>
 <p>The <strong>on</strong> condition allows a general predicate over the relations being joined.</p>
 <pre><code>select *
 from student join takes on student.ID = takes.ID;
-</code></pre><p>The on condition above specifies that a tuple from student matches a tuple from takes if their ID values are equal.<br>这与natural join很相似，但有一点不同：<strong>join … on</strong> 方式的结果中tuples有2个相同的ID。其与下面方式生成的结果一致：</p>
+</code></pre><p>The on condition above specifies that a tuple from student matches a tuple from takes if their ID values are equal.</p>
+<p>这与natural join很相似，但有一点不同：<strong>join … on</strong> 方式的结果中tuples有2个相同的ID。其与下面方式生成的结果一致：</p>
 <pre><code>select *
 from student, takes
 where student.ID = takes.ID；
@@ -123,11 +280,19 @@ natural full outer join
 (select *
  from takes
  where semester = &apos;Spring&apos; and year = 2009);
-</code></pre>
+</code></pre><p> <strong>on and where</strong> behave differently for outer join. The reason for this is that outer join adds null-padded tuples only for those tuples that do not contribute to the result of the corresponding inner join.</p>
+<p>To distinguish normal joins from outer joins, normal joins are called inner joins in SQL. 默认为inner join。</p>
+<pre><code>select *
+from student join takes using (ID);
+</code></pre><p>is equivalent to:<br>    select *<br>    from student inner join takes using (ID);</p>
+<p><strong>总结：</strong></p>
+<p><strong>Join types</strong>: inner join, left outer join, right outer join, full outer joinn。</p>
+<p><strong>Join conditions</strong>: natural, on “predicate”, using (A1, A2, …, An)。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/22/SQL学习/" data-id="cjmd72zy90000wkyysmi5jpgw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/09/22/SQL学习/" data-id="cjmdhep9b00068wyyswaopodq" class="article-share-link">Share</a>
       
       
     </footer>
